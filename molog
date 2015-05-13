@@ -1,0 +1,14 @@
+#!/usr/bin/expect
+set login "logger"
+set addr "10.16.28.75"
+set pw "0DMsTGk9XZK4R218os3q"
+set mypw "1994219_lZ"
+
+set timeout 10
+spawn ssh relay.autonavi.com
+expect {
+    "*password:" {
+        send "$mypw\r"
+        innteract
+    }
+}

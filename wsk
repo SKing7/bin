@@ -1,0 +1,27 @@
+#!/usr/bin/perl
+
+# Perform adb command on shell
+# to check if the device is attached
+$netstat = `adb shell 'netstat' 2>&1`;
+if($netstat =~ m/error: device not found/)
+{
+    die("Plug in your phone!\n");
+}
+
+# Gain root priviledges
+open(SUDO, "|sudo echo ''");
+close(SUDO);
+
+# Redirect STDERR output to STDOUT
+open STDERR, '>&STDOUT';
+
+# Perform tcpdump and nc in background
+open(COMMAND1, "(adb shell \"data/local/tcpdump -n -s 0 -w - | nc -l -p 12345\") |");
+
+# Perform piping to wireshark
+open(COMMAND2, "((adb forward tcp:12345 tcp:54321 && nc 127.0.0.1 54321 | sudo wireshark -k -S -i 2) &) 2>&1 > /dev/null |");
+
+# Make sure the exit message appears after wireshark has been launched (hacky)
+sleep(5);
+print("Press ctrl-c to exit...");
+<STDIN>;

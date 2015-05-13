@@ -1,0 +1,11 @@
+#!/bin/sh
+cd ~/autonavi
+cp mobile/zips/m-latest.zip  ./m-test.zip
+unzip -oq m-test.zip
+rm m-test.zip
+cd m
+npm install --production
+cd service
+cp ~/autonavi/*.json ./
+pm2 delete mo_test
+pm2 start process.json
