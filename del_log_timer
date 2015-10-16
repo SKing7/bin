@@ -1,0 +1,17 @@
+#!/bin/bash
+
+
+DAYSBEFORE=1
+TARGETDIR="/home/admin/cai/data/logs"
+
+TIMESTAMP=$(date -d "-${DAYSBEFORE} day" +%Y-%m-%d)
+
+#Nginx Log bakup
+cd ${TARGETDIR}
+sudo mv access.log access.log.${TIMESTAMP}
+sudo mv error.log error.log.${TIMESTAMP}
+
+sudo kill -USR1 $(ps -ef |grep nginx |grep master |awk '{print $2}')
+sleep 2
+
+sudo find ${TARGETDIR} -type f -mtime +30 -delete
